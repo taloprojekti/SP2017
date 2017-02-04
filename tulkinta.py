@@ -1,10 +1,6 @@
 # Tulkintaohjelma Nordpoolin day ahead -hintatietojen lukemiseen
 # txt-tiedostosta ja niiden tulkintaan aikatauluttaja-ohjelmaa varten
 
-# Viimeisin muokkaus 4.2.2017 Markus
-
-# Versio 00.03.01
-
 ######### DATAN TUOTTO #########
 
 jarj=[] #Alustetaan hintajärjestyksen muuttuja
