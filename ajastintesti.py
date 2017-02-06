@@ -9,8 +9,6 @@ def main():
 		if ret1 != False:
 			if msvcrt.getch():		#reagoi näppäimen painamiseen
 				return
-			else:
-				time.sleep(0.1)
 
 	while ret1 == 0:
 		now1 = datetime.now()
