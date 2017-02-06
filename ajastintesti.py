@@ -8,7 +8,7 @@ def main():
 		ret1 = msvcrt.kbhit()	#tutkii onko kone valmis ottamaan syötettä vastaan ja palauttaa True jos kyllä
 		if ret1 != False:
 			if msvcrt.getch():		#reagoi näppäimen painamiseen
-				break
+				return
 			else:
 				time.sleep(0.1)
 
@@ -21,8 +21,7 @@ def main():
 			if ret1 != False:
 				if msvcrt.getch():
 					return
-				else:
-					time.sleep(0.1)
+
 		now2 = datetime.now()
 		print ("{:d}:{:d}:{:d}".format(now2.hour, now2.minute, now2.second)) 
 		t0 = time.time()
@@ -31,7 +30,5 @@ def main():
 			if ret1 != False:
 				if msvcrt.getch():
 					return
-				else:
-					time.sleep(0.1)
 
 main()		
