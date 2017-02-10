@@ -34,8 +34,6 @@ def xmlparsinta(tiedot): # Funktio hakee parsinta.py -moduulin, joka lukee hinta
 	import parsinta
 	tiedot = parsinta.luetiedot(tiedot)
 	return tiedot
-
-######### DATAN KÄSITTELY #########
 	
 ######### MAIN #########
 def main():
