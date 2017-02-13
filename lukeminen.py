@@ -37,6 +37,7 @@ def xmlparsinta(tiedot): # Funktio hakee parsinta.py -moduulin, joka lukee hinta
 	
 def sdvparsinta(tiedot): # Funktio hakee parsinta.py -moduulin, joka lukee hintatiedot sdv-tiedostosta python-sanakirjaksi muuttujaan tiedot
 	import parsinta
+	tiedot = parsinta.luesdv(tiedot)
 	return tiedot
 	
 ######### MAIN #########
