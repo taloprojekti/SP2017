@@ -32,14 +32,18 @@ def delta(tiedot, min): # Funktio laskee tuntien välisen hintaeron. Päivän en
 		
 def xmlparsinta(tiedot): # Funktio hakee parsinta.py -moduulin, joka lukee hintatiedot xml-tiedostosta python-sanakirjaksi muuttujaan tiedot
 	import parsinta
-	tiedot = parsinta.luetiedot(tiedot)
+	tiedot = parsinta.luexml(tiedot)
+	return tiedot
+	
+def sdvparsinta(tiedot): # Funktio hakee parsinta.py -moduulin, joka lukee hintatiedot sdv-tiedostosta python-sanakirjaksi muuttujaan tiedot
+	import parsinta
 	return tiedot
 	
 ######### MAIN #########
 def main():
 	tiedot={}
 	try:
-		tiedot=xmlparsinta(tiedot)
+		tiedot=sdvparsinta(tiedot)
 		for rivi in tiedot:
 			print(rivi, tiedot[rivi])
 
