@@ -11,7 +11,7 @@ def luexml(tiedot):
 	
 	return tiedot
 	
-def luesdv(tiedot):
+def luesdv(tiedot, aika):
 	var1=[]
 	with open("data/hinta.sdv", "r") as file:
 		for rivi in file:
@@ -28,8 +28,3 @@ def luesdv(tiedot):
 					tiedot[int(i)]=float(var1[i+1])
 					i+=1
 	return tiedot
-
-def main():
-	luesdv({})
-	
-main()

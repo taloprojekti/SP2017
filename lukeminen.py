@@ -35,16 +35,17 @@ def xmlparsinta(tiedot): # Funktio hakee parsinta.py -moduulin, joka lukee hinta
 	tiedot = parsinta.luexml(tiedot)
 	return tiedot
 	
-def sdvparsinta(tiedot): # Funktio hakee parsinta.py -moduulin, joka lukee hintatiedot sdv-tiedostosta python-sanakirjaksi muuttujaan tiedot
+def sdvparsinta(tiedot, aika): # Funktio hakee parsinta.py -moduulin, joka lukee hintatiedot sdv-tiedostosta python-sanakirjaksi muuttujaan tiedot
 	import parsinta
-	tiedot = parsinta.luesdv(tiedot)
+	tiedot = parsinta.luesdv(tiedot, aika)
 	return tiedot
 	
 ######### MAIN #########
 def main():
 	tiedot={}
+	aika="18.02.17"
 	try:
-		tiedot=sdvparsinta(tiedot)
+		tiedot=sdvparsinta(tiedot, aika)
 		for rivi in tiedot:
 			print(rivi, tiedot[rivi])
 
