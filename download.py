@@ -3,9 +3,8 @@
 import time
 from ftplib import FTP
 
-def download():
-	year = 17
-	filename="heleur"+str(year)+".sdv" # Muodostetaan tiedostonimi serveriltä haettavalle tiedostolle kaavan heleuryy.sdv mukaan, missä yy on vuosiluku
+def download(year): ##parametrinä nykyinen vuosi muodossa yy (2017 -> 17)
+	command="RETR heleur"+str(year)+".sdv" # Muodostetaan tiedostonimi serveriltä haettavalle tiedostolle kaavan heleuryy.sdv mukaan, missä yy on vuosiluku
 	tunnus = []
 	file=open("data/tunnukset.txt", "r")
 	for rivi in file: # Luetaan serverin kirjautumistunnukset tiedostosta
