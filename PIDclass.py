@@ -13,13 +13,13 @@ class PID:
 		
 		valP = self.Kp * err # P-termi (proportional)
 		
-		i = float(self.last_i + err) # lasketaan tämän hetken i-termi
+		i = float(self.last_i + err) # I-termi (integral)
 		self.last_i = i
-		valI = Ki*i
+		valI = self.Ki*i
 		
-		d = err - self.last_d-
+		d = err - self.last_d # D-termi (derivative)
 		self.last_d = d
-		valD = Kd*d
+		valD = self.Kd*d
 		
 		PID = valP + valI + valD
 		return PID
