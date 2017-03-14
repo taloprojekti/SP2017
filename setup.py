@@ -15,7 +15,7 @@ def Pgain():
 	return float(1.0)
 	
 def Igain():
-	return float(1.0)
+	return float(0.1)
 	
 def Dgain():
 	return float(0.0)
