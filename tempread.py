@@ -1,4 +1,4 @@
-#read_temp() palauttaa hetkellisen lämpötila-arvon celsiuksina.
+﻿#read_temp() palauttaa hetkellisen lämpötila-arvon celsiuksina.
 #Huom! OneWire support lisättävä Raspiin.
 #Ohjeet sivulla:
 #https://cdn-learn.adafruit.com/downloads/pdf/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing.pdf
@@ -20,7 +20,7 @@ def read_temp_raw():
     f.close()
     return lines
 
-def read_temp():
+def read_temp_in():
     lines = read_temp_raw()
     while lines[0].strip()[-3:] != 'YES':
         time.sleep(0.2)
@@ -32,6 +32,11 @@ def read_temp():
         temp_f = temp_c * 9.0 / 5.0 + 32.0
         return temp_c
 
+def write_temp(pvm): #tallentaa lämpötilatiedot tiedoston uudelle riville
+    tiedosto = open("tiloja.txt", "a")
+    temp = read_temp() #tallentaa lämpötilan ja päivämäärän erotettuna puolipisteellä
+    tiedosto.write("{:.2f};{}\n".format(temp,pvm))
+    tiedosto.close()
 
 # osio jonka avulla voi testata lämpötilamittarin toimivuutta
 while True:
