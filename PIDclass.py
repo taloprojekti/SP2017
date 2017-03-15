@@ -8,8 +8,8 @@ class PID:
 		self.last_i = 0
 		self.last_d = 0
 	
-	def process(self, set, curr):
-		err = float(set - curr)
+	def process(self, set_T, curr):
+		err = float(set_T - curr)
 		
 		valP = self.Kp * err # P-termi (proportional)
 		
