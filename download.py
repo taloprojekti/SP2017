@@ -3,7 +3,7 @@
 import time
 from ftplib import FTP
 
-def download(year): ##parametrinä nykyinen vuosi muodossa yy (2017 -> 17)
+def download(year): # parametrinä nykyinen vuosi muodossa yy (2017 -> 17)
 	command="RETR heleur"+str(year)+".sdv" # Muodostetaan tiedostonimi serveriltä haettavalle tiedostolle kaavan heleuryy.sdv mukaan, missä yy on vuosiluku
 	tunnus = []
 	file=open("data/tunnukset.txt", "r")
@@ -21,7 +21,3 @@ def download(year): ##parametrinä nykyinen vuosi muodossa yy (2017 -> 17)
 	print(ftp.retrbinary("RETR heleur17.sdv", open("data/hinta.sdv", "wb").write, blocksize=4096)) # Luetaan hintatiedot serveriltä hinta.sdv -tiedostoon data-kansiossa
 	time.sleep(5)
 	print(ftp.quit()) # Katkaistaan yhteys FTP-serveriin
-def main():
-	download()
-
-main()
