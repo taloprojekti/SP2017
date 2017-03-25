@@ -85,4 +85,4 @@ def main():
 		rele_cleanup(rele_pin)
 		return
 	
-main()	
+main() 

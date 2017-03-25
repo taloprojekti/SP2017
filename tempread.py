@@ -66,4 +66,4 @@ def main():
     while True:
         print(read_temp_in())
         print (read_temp_out())
-        time.sleep(1)
+time.sleep(1)

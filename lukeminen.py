@@ -18,42 +18,55 @@ def minimi(tiedot):
 	print(minim)
 	return minim
 
-def delta(tiedot, min): # Funktio laskee tuntien välisen hintaeron. Päivän ensimmäinen tunti näytetään nollana.
+def min_delta(tiedot, min): # Funktio laskee tuntien välisen hintaeron. Päivän ensimmäinen tunti näytetään nollana.
 	lista=[]
+	print(min)
+	print("paska")
 	for rivi in tiedot:
-		if rivi > 0:
-			arvo=float(((tiedot[rivi]-tiedot[min])/tiedot[min]))
-			lista.append(arvo)
-		else:
-			arvo = 0
-			lista.append(arvo)
+		arvo=float(((tiedot[rivi]-tiedot[min])/tiedot[min]))
+		lista.append(arvo)
 		print("{:.2f}".format(arvo))
 	return lista
+		
+def hinta_delta(tiedot): # Funktio laskee tuntien välisen hintaeron. Päivän ensimmäinen tunti näytetään nollana.
+	lista=[]
+	for rivi in tiedot:
+		arvo=float(tiedot[rivi+1]-tiedot[rivi])
+		lista.append(arvo)
+		print("{:.2f}".format(arvo))
+	return lista
+
+def deltadeltaP(delta):
+	i=0
+	ddP=[]
+	while i <= 22:
+		arvo=delta[i+1]-delta[i]
+		ddP.append(arvo)
+		print(arvo)
+		i+=1
+	return ddP
 		
 def xmlparsinta(tiedot): # Funktio hakee parsinta.py -moduulin, joka lukee hintatiedot xml-tiedostosta python-sanakirjaksi muuttujaan tiedot
 	import parsinta
 	tiedot = parsinta.luexml(tiedot)
 	return tiedot
 	
-def sdvparsinta(tiedot, aika): # Funktio hakee parsinta.py -moduulin, joka lukee hintatiedot sdv-tiedostosta python-sanakirjaksi muuttujaan tiedot
+def sdvparsinta(tiedot, pvm): # Funktio hakee parsinta.py -moduulin, joka lukee hintatiedot sdv-tiedostosta python-sanakirjaksi muuttujaan tiedot
 	import parsinta
-	tiedot = parsinta.luesdv(tiedot, aika)
+	tiedot = parsinta.luesdv(tiedot, pvm)
 	return tiedot
 	
 ######### MAIN #########
-def main():
+def luetiedot(pvm):
 	tiedot={}
-	aika="18.02.17"
 	try:
-		tiedot=sdvparsinta(tiedot, aika)
+		tiedot=sdvparsinta(tiedot, pvm)
 		for rivi in tiedot:
 			print(rivi, tiedot[rivi])
 
 		jarj=jarjestys(tiedot)
 		minim=minimi(tiedot)
-		muutos=delta(tiedot, minim)
-		print(muutos)
 	except OSError:
 		print("Virhe tiedoston lukemisessa.")
-	
-main()
+		
+	return tiedot

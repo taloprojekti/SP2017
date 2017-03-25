@@ -11,11 +11,11 @@ def luexml(tiedot):
 	
 	return tiedot
 	
-def luesdv(tiedot, aika):
+def luesdv(tiedot, pvm):
 	var1=[]
 	with open("data/hinta.sdv", "r") as file:
 		for rivi in file:
-			if "14.02.17" in rivi:
+			if pvm in rivi:
 				var1=rivi.split(";")
 				i=0
 				while (i < 25):
