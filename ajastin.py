@@ -16,7 +16,7 @@ def rele_cleanup(rele_pin):
 def tempread_in():
 	import tempread
 	return tempread.read_temp_in()
-w	
+	
 def tempread_out():
 	import tempread
 	return tempread.read_temp_out()
@@ -83,7 +83,15 @@ def main():
 				d = now.day
 				m = now.month
 				y = now.year
-				stringtowrite = str(d) + str(m) + str(y)
+				if d < 10: 
+					if m < 10:
+						stringtowrite = "0" + str(d) + "0" + str(m) + str(y)
+					else:	
+						stringtowrite = "0" + str(d) + str(m) + str(y)
+				elif d > 10 and m < 10:
+					stringtowrite = str(d) + "0" + str(m) + str(y)
+				else:	
+					stringtowrite = str(d) + str(m) + str(y)
 				file = open("checklist.txt", "w")
 				file.write(stringtowrite)
 				file.close()
