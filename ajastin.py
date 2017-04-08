@@ -28,13 +28,23 @@ def main():
 	
 	import setup
 	import PIDclass
-	
+	import checklist
 	
 	
 	n = 0
 	ret1 = 0
 	t0 = time.time()
-	
+	ret = checklist.main()
+	if ret == 0:
+		downloader(now.year-2000)
+		now = datetime.now()
+		d = now.day
+		m = now.month
+		y = now.year
+		stringtowrite = str(d) + str(m) + str(y)
+		file = open("checklist.txt", "w")
+		file.write(stringtowrite)
+		file.close()
 	# Setup.py -tiedostosta luettujen muuttujien alustus
 	rele_pin = setup.Rele_pin()
 	Tfav = setup.Tfav()
@@ -68,11 +78,27 @@ def main():
 			print("{:.2f}".format(tempread_out()))
 			print(rele(mode, PID_curr, 21, tempread_in(), DBmax, DBmin, rele_pin))
 			print()
-			if now.minute == 58 and now.hour == 1:
-				downloader(now.year)
+			if now.minute == 0 and now.hour == 0:
+				downloader(now.year - 2000)
+				d = now.day
+				m = now.month
+				y = now.year
+				if d < 10: 
+					if m < 10:
+						stringtowrite = "0" + str(d) + "0" + str(m) + str(y)
+					else:	
+						stringtowrite = "0" + str(d) + str(m) + str(y)
+				elif d > 10 and m < 10:
+					stringtowrite = str(d) + "0" + str(m) + str(y)
+				else:	
+					stringtowrite = str(d) + str(m) + str(y)
+				file = open("checklist.txt", "w")
+				file.write(stringtowrite)
+				file.close()
 				while now.minute == 0:
 					time.sleep(1)
 					now = datetime.now()
+	
 
 			if now.minute % 30 == 0: 
 				tempread_in() 
