@@ -17,6 +17,11 @@ def minimi(tiedot):
 	minim = min(tiedot, key=tiedot.get)
 	print(minim)
 	return minim
+	
+def maksimi(tiedot):
+	maxim = max(tiedot, key=tiedot.get)
+	print(maxim)
+	return maxim
 
 def min_delta(tiedot, min): # Funktio laskee tuntien välisen hintaeron. Päivän ensimmäinen tunti näytetään nollana.
 	lista=[]
@@ -24,6 +29,16 @@ def min_delta(tiedot, min): # Funktio laskee tuntien välisen hintaeron. Päivä
 	print("paska")
 	for rivi in tiedot:
 		arvo=float(((tiedot[rivi]-tiedot[min])/tiedot[min]))
+		lista.append(arvo)
+		print("{:.2f}".format(arvo))
+	return lista
+	
+def max_delta(tiedot, max): # Funktio laskee tuntien välisen hintaeron. Päivän ensimmäinen tunti näytetään nollana.
+	lista=[]
+	print(max)
+	print("paska")
+	for rivi in tiedot:
+		arvo=float(((tiedot[rivi])/tiedot[max]))
 		lista.append(arvo)
 		print("{:.2f}".format(arvo))
 	return lista
