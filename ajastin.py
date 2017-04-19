@@ -8,6 +8,11 @@ def rele(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin):
 	tila = rele.switch(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin)
 	return tila
 	
+def rele_cleanup(rele_pin):
+	import rele
+	rele.cleanup(rele_pin)
+	print("GPIO cleanup done")
+	
 def tempread_in():
 	import tempread
 	return tempread.read_temp_in()
@@ -38,10 +43,18 @@ def main():
 	Dgain = setup.Dgain()
 	DBmin = setup.DBmin()
 	DBmax = setup.DBmax()
+	Imax = setup.Imax()
+	Imin = setup.Imin()
 	
-	PIDajo = PIDclass.PID(setup.Pgain(), setup.Igain(), setup.Dgain()) # PID-ajon alustus setup-tiedoston gain-arvoilla
+	PIDajo = PIDclass.PID(Pgain, Igain, Dgain, Imax, Imin) # PID-ajon alustus setup-tiedoston gain-arvoilla
+	
+	print("Setup complete:")
+	print("	PID-Gains: P={:.1f}, I={:.1f}, D={:.1f}".format(Pgain,Igain,Dgain))
+	print("	PID-Deadband: {:.1f} - {:.1f}".format(DBmin,DBmax))
+	print("	Integrator range: {:.1f} - {:.1f}\n".format(Imin,Imax))
 	
 	try:
+		print("Entering loop")
 		while ret1 == 0:
 			time.sleep(10)
 
@@ -68,7 +81,8 @@ def main():
 					datetime.now()
 					
 	except KeyboardInterrupt:
-		
+		print("Exiting loop\n")
+		rele_cleanup(rele_pin)
 		return
 	
 main() 

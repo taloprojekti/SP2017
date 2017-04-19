@@ -12,7 +12,7 @@ def Tmax():
 	return int(23) # Maksimilämpötila, johon rakennuksen sisälämmön annetaan nousta.
 
 def Tfav():
-	return int(22) # Suosikkilämpötila, johon rakennuksen sisälämpö asetetaan, kun päivän sähkönhinnat ovat tasaiset.
+	return int(24) # Suosikkilämpötila, johon rakennuksen sisälämpö asetetaan, kun päivän sähkönhinnat ovat tasaiset.
 	
 ##### PID-TUNING #####	
 def Pgain():
@@ -24,9 +24,15 @@ def Igain():
 def Dgain():
 	return float(0.0)
 	
+def Imax():
+	return float(3.0)
+	
+def Imin():
+	return float(3.0)
+	
 ##### RELEEN DEADBAND-ASETUKSET #####
 def DBmin():
-	return -0.5
+	return 0.0
 	
 def DBmax():
 	return 0.5

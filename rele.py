@@ -6,7 +6,8 @@ def virta_on(rele_pin):
 def virta_off(rele_pin):
 	GPIO.output(rele_pin, GPIO.LOW)
 	
-def cleanup():
+def cleanup(rele_pin):
+	GPIO.output(rele_pin, GPIO.LOW)
 	GPIO.cleanup()
 	
 def switch(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin):
@@ -27,3 +28,4 @@ def switch(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin):
 		elif PID < deadband_min:
 			virta_off(rele_pin)
 			return "off"
+			
