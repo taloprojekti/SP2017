@@ -35,6 +35,7 @@ def main():
 	ret1 = 0
 	t0 = time.time()
 	ret = checklist.main()
+	print("Checking downloader state.")
 	if ret == 0:
 		downloader(now.year-2000)
 		now = datetime.now()
@@ -48,13 +49,19 @@ def main():
 	# Setup.py -tiedostosta luettujen muuttujien alustus
 	rele_pin = setup.Rele_pin()
 	Tfav = setup.Tfav()
+	
 	Pgain = setup.Pgain()
 	Igain = setup.Igain()
 	Dgain = setup.Dgain()
+	
 	DBmin = setup.DBmin()
 	DBmax = setup.DBmax()
+	
 	Imax = setup.Imax()
 	Imin = setup.Imin()
+	
+	pd_min = setup.pd_min()
+	pdd_min = setup.pdd_min()
 	
 	PIDajo = PIDclass.PID(Pgain, Igain, Dgain, Imax, Imin) # PID-ajon alustus setup-tiedoston gain-arvoilla
 	

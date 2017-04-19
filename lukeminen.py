@@ -30,7 +30,9 @@ def min_delta(tiedot, min): # Funktio laskee tuntien välisen hintaeron. Päivä
 	for rivi in tiedot:
 		arvo=float(((tiedot[rivi]-tiedot[min])/tiedot[min]))
 		lista.append(arvo)
-		print("{:.2f}".format(arvo))
+		print("{:.4f}".format(arvo))
+		
+	print(lista)
 	return lista
 	
 def max_delta(tiedot, max): # Funktio laskee tuntien välisen hintaeron. Päivän ensimmäinen tunti näytetään nollana.
