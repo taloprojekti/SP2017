@@ -12,7 +12,7 @@ def Tmax():
 	return int(23) # Maksimilämpötila, johon rakennuksen sisälämmön annetaan nousta.
 
 def Tfav():
-	return int(24) # Suosikkilämpötila, johon rakennuksen sisälämpö asetetaan, kun päivän sähkönhinnat ovat tasaiset.
+	return int(27) # Suosikkilämpötila, johon rakennuksen sisälämpö asetetaan, kun päivän sähkönhinnat ovat tasaiset.
 	
 ##### PID-TUNING #####	
 def Pgain():

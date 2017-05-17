@@ -13,13 +13,13 @@ def rele_cleanup(rele_pin):
 	rele.cleanup(rele_pin)
 	print("GPIO cleanup done")
 	
-def tempread_in():
+def tempread_all():
 	import tempread
-	return tempread.read_temp_in()
+	return tempread.read_temp()
 	
-def tempread_out():
+def write_temp(pvm):
 	import tempread
-	return tempread.read_temp_out()
+	tempread.write_temp(pvm)
 
 def main():
 	
@@ -58,31 +58,38 @@ def main():
 		while ret1 == 0:
 			time.sleep(10)
 
+			#Lämpötilan lukeminen
+			temp_all = tempread_all()
+			temp_in = float(temp_all[0])
+			temp_out = float(temp_all[1])
 			
 			now = datetime.now()
-			PID_curr = PIDajo.process(Tfav, tempread_in())
+			PID_curr = PIDajo.process(Tfav, temp_in)
 			mode = "PIDctrl"
 			print("{:d}:{:d}:{:d}".format(now.hour, now.minute, now.second))
+			
+			#PID-ajo
 			print("{:.4f}".format(PID_curr)) #PID-ajon testi, pitää myöhemmin integroida ajasta riippuvan if-ehdon sisään ja yhdistää lämmittimen hallintaan.
-			print("{:.2f}".format(tempread_in()))
-			print("{:.2f}".format(tempread_out()))
-			print(rele(mode, PID_curr, 21, tempread_in(), DBmax, DBmin, rele_pin))
+			print(rele(mode, PID_curr, 21, temp_in, DBmax, DBmin, rele_pin))
 			print()
-			if now.minute == 58 and now.hour == 1:
+			
+			#Telemetria
+			pvm = str("{}-{}-{};{}:{}:{}".format(now.year, now.month, now.day, now.hour, now.minute, now.second))
+			write_temp(pvm)
+			if now.minute == 57 and now.hour == 17:
 				downloader(now.year)
 				while now.minute == 0:
 					time.sleep(1)
 					now = datetime.now()
 
-			if now.minute % 30 == 0: 
-				tempread_in() 
-				while now.minute % 30:
-					time.sleep(1)
-					datetime.now()
+			#if now.minute % 30 == 0:
+			#	while now.minute % 30:
+			#		time.sleep(1)
+			#		datetime.now()
 					
 	except KeyboardInterrupt:
-		print("Exiting loop\n")
 		rele_cleanup(rele_pin)
+		print("Exiting loop\n")
 		return
 	
 main() 
