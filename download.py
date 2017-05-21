@@ -1,5 +1,7 @@
 # Downloaderi hintadatan lukemiseksi Nordpool API:sta.
 
+#TO-DO: Koodaa muiden kodekkien muuntaminen UTF-8:aan
+
 import time
 from ftplib import FTP
 

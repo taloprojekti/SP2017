@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(29, GPIO.OUT)
+
 def virta_on(rele_pin):
 	GPIO.output(rele_pin, GPIO.HIGH)
 	
@@ -29,5 +28,3 @@ def switch(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin):
 		elif PID < deadband_min:
 			virta_off(rele_pin)
 			return "off"
-			
-virta_on(29)
