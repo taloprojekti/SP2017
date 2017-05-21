@@ -1,3 +1,4 @@
+
 # Hintatietojen parsiminen Nordpoolin API:sta saatavasta SDV-tiedostosta
 	
 def luesdv(tiedot, pvm):
@@ -20,6 +21,7 @@ def luesdv(tiedot, pvm):
 		return tiedot
 		
 ##### Legacy-koodia #####
+
 def luexml(tiedot):
 	import xml.etree.ElementTree as ET
 	root = ET.parse("data/hinta.xml").getroot()

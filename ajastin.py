@@ -20,7 +20,7 @@ def tempread_all():
 def write_temp(pvm):
 	import tempread
 	tempread.write_temp(pvm)
-	
+
 def ptulkinta(day, month, year, hour):
 	import tulkinta
 	tulkinta.main(day, month, year, hour)
@@ -62,8 +62,7 @@ def mode_switch(hour, minute, second):
 	else:
 		mode = "PIDctrl"
 	return mode
-	
-	
+
 def main():
 	
 	import time          
@@ -77,6 +76,7 @@ def main():
 	n = 0
 	ret1 = 0
 	t0 = time.time()
+
 	print("Checking downloader state.")
 	ret = checklist.main()
 	if ret == 0:
@@ -97,6 +97,7 @@ def main():
 			strN = str(d) + str(m) + str(y)
 		file = open("tasklists/tasklist-downloader.txt", "w")
 		file.write(strN)
+
 		file.close()
 	# Setup.py -tiedostosta luettujen muuttujien alustus
 	rele_pin = setup.Rele_pin()
@@ -112,16 +113,15 @@ def main():
 	Imax = setup.Imax()
 	Imin = setup.Imin()
 	
-	#pd_min = setup.pd_min()
-	#pdd_min = setup.pdd_min()
-	
 	PIDajo = PIDclass.PID(Pgain, Igain, Dgain, Imax, Imin) # PID-ajon alustus setup-tiedoston gain-arvoilla
 	
 	print("Setup complete:")
 	print("	PID-Gains: P={:.1f}, I={:.1f}, D={:.1f}".format(Pgain,Igain,Dgain))
 	print("	PID-Deadband: {:.1f} - {:.1f}".format(DBmin,DBmax))
 	print("	Integrator range: {:.1f} - {:.1f}\n".format(Imin,Imax))
+
 	flag = 0    #tarvitaan downloaderissa
+
 	
 	try:
 		print("Entering loop")
@@ -134,17 +134,13 @@ def main():
 			temp_out = float(temp_all[1])
 			
 			now = datetime.now()
+
 			PID_curr = PIDajo.process(Tfav, temp_in)	
 			# t = tämä hetki
 			# n = start-end-intervallien määrä
 			
-			
-			
 			mode = mode_switch(now.hour, now.minute, now.second)
-			
-			
-			
-			#Koodaa checklistin käsittely, josta luetaan onko prog- vai pid-tila
+
 			print("{:d}:{:d}:{:d}".format(now.hour, now.minute, now.second))
 			
 			#PID-ajo
@@ -153,6 +149,7 @@ def main():
 			print()
 
 			#Telemetria
+
 			pvm = str("{}-{}-{},{}:{}:{}".format(now.year, now.month, now.day, now.hour, now.minute, now.second))
 			write_temp(pvm)
 			if (now.minute == 54 and now.hour == 20) or (now.minute == 55 and now.hour == 20):
@@ -185,6 +182,7 @@ def main():
 				flag = 0
 			if (now.minute == 56 and now.hour == 16) or (now.minute == 57 and now.hour == 16):
 				ptulkinta(now.day, now.month, now.year, now.hour)
+
 			#if now.minute % 30 == 0:
 			#	while now.minute % 30:
 			#		time.sleep(1)

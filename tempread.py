@@ -1,5 +1,5 @@
 def read_temp():
-	import serial
+  import serial
 	ser = serial.Serial('/dev/ttyACM0', 9600)
 	i=0
 	while(i<5):
@@ -25,4 +25,5 @@ def write_temp(pvm): #tallentaa lämpötilatiedot tiedoston uudelle riville
     temp = read_temp_in() #tallentaa lämpötilan ja päivämäärän erotettuna puolipisteellä
     temp2 = read_temp_out()
     tiedosto.write("{:.2f},{:.2f},{}\n".format(temp,temp2,pvm))
+
     tiedosto.close()

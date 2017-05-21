@@ -20,4 +20,4 @@ def main():
 		print("Downloader ajo")
 		return 0
 	print("Downloader ei ajo")
-	return 1	
+	return 1
