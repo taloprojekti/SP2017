@@ -4,7 +4,7 @@ def main():
 	p = nownew.day
 	k = nownew.month
 	v = nownew.year
-	if p < 10: 
+	if p < 10:
 		if k < 10:
 			strN = "0" + str(p) + "0" + str(k) + str(v)
 		else:	
@@ -13,9 +13,11 @@ def main():
 		strN = str(p) + "0" + str(k) + str(v)
 	else:	
 		strN = str(p) + str(k) + str(v)
-	file = open("checklist.txt", "r")
+	file = open("tasklists/tasklist-downloader.txt", "r")
 	strL = file.read()
+	print(strL, strN)
 	if  strN != strL:
+		print("Downloader ajo")
 		return 0
-	return 1	
-main()	
+	print("Downloader ei ajo")
+	return 1

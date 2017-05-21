@@ -78,12 +78,18 @@ def luetiedot(pvm):
 	tiedot={}
 	try:
 		tiedot=sdvparsinta(tiedot, pvm)
+
+		if tiedot==False:
+			tiedot=sdvparsinta(tiedot, pvm)
+
 		for rivi in tiedot:
 			print(rivi, tiedot[rivi])
 
 		jarj=jarjestys(tiedot)
 		minim=minimi(tiedot)
+
 	except OSError:
 		print("Virhe tiedoston lukemisessa.")
 		
 	return tiedot
+
