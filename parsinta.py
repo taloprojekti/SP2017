@@ -5,7 +5,7 @@ def luesdv(tiedot, pvm):
 		var1=[]
 		with open("data/hinta.sdv", "r", encoding='iso 8859-15') as file:
 			for rivi in file:
-				if "FI;EUR" in rivi:
+				if (("FI;EUR" in rivi) and (pvm in rivi)):
 					print(rivi)
 					var1=rivi.split(";")
 					i=0
