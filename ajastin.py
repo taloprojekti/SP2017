@@ -1,6 +1,7 @@
-def downloader(year):
+def downloader(year, month, day):
 	import download
-	download.download(year-2000)
+	week = datetime.date(year, month, day).isocalendar()[1] #Haetaan viikkonumero
+	download.download(year, week)
 	return 0
 
 def rele(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin):
@@ -64,14 +65,12 @@ def mode_switch(hour, minute, second):
 	return mode
 
 def main():
-	
 	import time          
 	from datetime import datetime
 	
 	import setup
 	import PIDclass
 	import checklist
-	
 	
 	n = 0
 	ret1 = 0
@@ -81,11 +80,12 @@ def main():
 	ret = checklist.main()
 	if ret == 0:
 		now = datetime.now()
-		downloader(now.year-2000)
-		nownew = datetime.now()
-		d = nownew.day
-		m = nownew.month
-		y = nownew.year
+		d = now.day
+		m = now.month
+		y = now.year
+
+		downloader(y, m, d)
+
 		if d < 10:
 			if m < 10:
 				strN = "0" + str(d) + "0" + str(m) + str(y)
@@ -122,7 +122,6 @@ def main():
 
 	flag = 0    #tarvitaan downloaderissa
 
-	
 	try:
 		print("Entering loop")
 		while ret1 == 0:
@@ -152,10 +151,10 @@ def main():
 
 			pvm = str("{}-{}-{},{}:{}:{}".format(now.year, now.month, now.day, now.hour, now.minute, now.second))
 			write_temp(pvm)
-			if (now.minute == 54 and now.hour == 20) or (now.minute == 55 and now.hour == 20):
+			if (now.minute == 00 and now.hour == 00) or (now.minute == 01 and now.hour == 00):
 				print(flag)
 				if flag == 0:
-					downloader(now.year - 2000)
+					downloader(now.year, now.month, now.day)
 					flag = 1                    #jotta mentäisiin tähän vain kerran
 					d = now.day
 					m = now.month
@@ -178,9 +177,11 @@ def main():
 						now = datetime.now()
 				else:
 					continue
+					
 			if (now.minute == 5 and now.hour == 0):     #resetoi flagin nollaksi, jotta sitä voidaan käyttää ensi keskiyönä
 				flag = 0
-			if (now.minute == 56 and now.hour == 16) or (now.minute == 57 and now.hour == 16):
+				
+			if (now.minute == 7 and now.hour == 3) or (now.minute == 8 and now.hour == 3):
 				ptulkinta(now.day, now.month, now.year, now.hour)
 
 			#if now.minute % 30 == 0:

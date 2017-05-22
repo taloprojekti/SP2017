@@ -14,8 +14,9 @@ def jarjestys(tiedot): # Funktio luo listan tunneista, joka on järjestetty halv
 	return lista
 
 def minimi(tiedot):
+	print(tiedot)
 	minim = min(tiedot, key=tiedot.get)
-	print(minim)
+	print("Min: {:.2f}".format(minim))
 	return minim
 	
 def maksimi(tiedot):
@@ -68,19 +69,19 @@ def xmlparsinta(tiedot): # Funktio hakee parsinta.py -moduulin, joka lukee hinta
 	tiedot = parsinta.luexml(tiedot)
 	return tiedot
 	
-def sdvparsinta(tiedot, pvm): # Funktio hakee parsinta.py -moduulin, joka lukee hintatiedot sdv-tiedostosta python-sanakirjaksi muuttujaan tiedot
+def sdvparsinta(tiedot): # Funktio hakee parsinta.py -moduulin, joka lukee hintatiedot sdv-tiedostosta python-sanakirjaksi muuttujaan tiedot
 	import parsinta
-	tiedot = parsinta.luesdv(tiedot, pvm)
+	tiedot = parsinta.luesdv(tiedot)
 	return tiedot
 	
 ######### MAIN #########
-def luetiedot(pvm):
+def luetiedot():
 	tiedot={}
 	try:
-		tiedot=sdvparsinta(tiedot, pvm)
+		tiedot=sdvparsinta(tiedot)
 
 		if tiedot==False:
-			tiedot=sdvparsinta(tiedot, pvm)
+			tiedot=sdvparsinta(tiedot)
 
 		for rivi in tiedot:
 			print(rivi, tiedot[rivi])
@@ -93,3 +94,4 @@ def luetiedot(pvm):
 		
 	return tiedot
 
+luetiedot(9)
