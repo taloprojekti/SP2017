@@ -7,14 +7,14 @@ def main(day, month, year, hour):
 	import lukeminen
 
 	# Muodostetaan str-tyyppinen päiväys muodossa "dd.mm.yy" Nordpoolin hintatietojen lukemiseksi
-	if day < 10:
-		day = str(day)
-		day = str("0"+day)
-	if month < 10:
-		month = str(month)
-		month = str("0"+month)
+	#if day < 10:
+	#	day = str(day)
+	#	day = str("0"+day)
+	#if month < 10:
+	#	month = str(month)
+	#	month = str("0"+month)
 
-	pvm = str("{}.{}.{}".format(day, month, year-2000))
+	#pvm = str("{}.{}.{}".format(day, month, year-2000))
 	print(pvm)
 
 	tiedot = lukeminen.luetiedot(pvm)
