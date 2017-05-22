@@ -69,16 +69,16 @@ def xmlparsinta(tiedot): # Funktio hakee parsinta.py -moduulin, joka lukee hinta
 	tiedot = parsinta.luexml(tiedot)
 	return tiedot
 	
-def sdvparsinta(tiedot): # Funktio hakee parsinta.py -moduulin, joka lukee hintatiedot sdv-tiedostosta python-sanakirjaksi muuttujaan tiedot
+def sdvparsinta(tiedot, pvm): # Funktio hakee parsinta.py -moduulin, joka lukee hintatiedot sdv-tiedostosta python-sanakirjaksi muuttujaan tiedot
 	import parsinta
-	tiedot = parsinta.luesdv(tiedot)
+	tiedot = parsinta.luesdv(tiedot, pvm)
 	return tiedot
 	
 ######### MAIN #########
-def luetiedot():
+def luetiedot(pvm):
 	tiedot={}
 	try:
-		tiedot=sdvparsinta(tiedot)
+		tiedot=sdvparsinta(tiedot, pvm)
 
 		if tiedot==False:
 			tiedot=sdvparsinta(tiedot)
@@ -93,5 +93,3 @@ def luetiedot():
 		print("Virhe tiedoston lukemisessa.")
 		
 	return tiedot
-
-luetiedot(9)

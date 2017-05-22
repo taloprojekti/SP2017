@@ -1,6 +1,5 @@
-def downloader(year, month, day):
+def downloader(year, month, day, week):
 	import download
-	week = datetime.date(year, month, day).isocalendar()[1] #Haetaan viikkonumero
 	download.download(year, week)
 	return 0
 
@@ -66,7 +65,7 @@ def mode_switch(hour, minute, second):
 
 def main():
 	import time          
-	from datetime import datetime
+	import datetime
 	
 	import setup
 	import PIDclass
@@ -79,12 +78,13 @@ def main():
 	print("Checking downloader state.")
 	ret = checklist.main()
 	if ret == 0:
-		now = datetime.now()
+		now = datetime.datetime.now()
 		d = now.day
 		m = now.month
 		y = now.year
+		week = datetime.date(y, m, d).isocalendar()[1] #Haetaan viikkonumero
 
-		downloader(y, m, d)
+		downloader(y, m, d, week)
 
 		if d < 10:
 			if m < 10:
@@ -132,7 +132,7 @@ def main():
 			temp_in = float(temp_all[0])
 			temp_out = float(temp_all[1])
 			
-			now = datetime.now()
+			now = datetime.datetime.now()
 
 			PID_curr = PIDajo.process(Tfav, temp_in)	
 			# t = tämä hetki
@@ -151,14 +151,15 @@ def main():
 
 			pvm = str("{}-{}-{},{}:{}:{}".format(now.year, now.month, now.day, now.hour, now.minute, now.second))
 			write_temp(pvm)
-			if (now.minute == 00 and now.hour == 00) or (now.minute == 01 and now.hour == 00):
+			if (now.minute == 0 and now.hour == 0) or (now.minute == 1 and now.hour == 0):
 				print(flag)
-				if flag == 0:
-					downloader(now.year, now.month, now.day)
+				if flag == 0:	
 					flag = 1                    #jotta mentäisiin tähän vain kerran
 					d = now.day
 					m = now.month
 					y = now.year
+					week = datetime.date(y, m, d).isocalendar()[1] #Haetaan viikkonumero
+					downloader(y, m, d, week)
 					if d < 10:
 						if m < 10:
 							stringtowrite = "0" + str(d) + "0" + str(m) + str(y)
@@ -181,7 +182,7 @@ def main():
 			if (now.minute == 5 and now.hour == 0):     #resetoi flagin nollaksi, jotta sitä voidaan käyttää ensi keskiyönä
 				flag = 0
 				
-			if (now.minute == 7 and now.hour == 3) or (now.minute == 8 and now.hour == 3):
+			if (now.minute == 54 and now.hour == 3) or (now.minute == 55 and now.hour == 3):
 				ptulkinta(now.day, now.month, now.year, now.hour)
 
 			#if now.minute % 30 == 0:

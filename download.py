@@ -27,7 +27,7 @@ def download(year, week):
 		print(ftp.retrbinary("{}".format(command), open("data/hinta.sdv", "wb").write, blocksize=4096)) # Luetaan hintatiedot serveriltä hinta.sdv -tiedostoon data-kansiossa
 	
 	except FileNotFoundError:
-		print("ERROR: Creditials file not found")
+		print("ERROR: Credentials file not found")
 		
 	except ftplib.error_perm as e:
 		print("ERROR: Failed to read the file from FTP server: Error code {}".format(e.args[0][:3]))

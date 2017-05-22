@@ -1,15 +1,15 @@
 def read_temp():
 	import serial
-		ser = serial.Serial('/dev/ttyACM0', 9600)
-		i=0
-		while(i<5):
-			response1 = ser.readline().strip().decode()
-			response2 = ser.readline().strip().decode()
-			i+=1
-					
-		print("temp_in: {}, temp_out: {}\n".format(response1,response2))
-					
-		return (response1,response2)
+	ser = serial.Serial('/dev/ttyACM0', 9600)
+	i=0
+	while(i<5):
+		response1 = ser.readline().strip().decode()
+		response2 = ser.readline().strip().decode()
+		i+=1
+				
+	print("temp_in: {}, temp_out: {}\n".format(response1,response2))
+				
+	return (response1,response2)
 
 def jako(n):
         return float(read_temp()[n])
