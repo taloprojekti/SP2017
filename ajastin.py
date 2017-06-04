@@ -134,7 +134,7 @@ def main():
 			
 			now = datetime.datetime.now()
 
-			PID_curr = PIDajo.process(Tfav, temp_in)	
+			PID_curr = PIDajo.process(Tfav, temp_in)
 			# t = tämä hetki
 			# n = start-end-intervallien määrä
 			
