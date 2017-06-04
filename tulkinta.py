@@ -56,5 +56,3 @@ def main(day, month, year, hour):
 
 #Ratkaistaan prog-tilan aikaväli, jonka jälkeen lasketaan mihin lämpötilaan rakennus pitää lämmittää ennen välin alkua.
 #Välin aikana lasketaan milloin pitää lämmittää lisää jotta lämpötila pysyy Tmin yläpuolella.
-
-main(22, 5, 2017, 4)
