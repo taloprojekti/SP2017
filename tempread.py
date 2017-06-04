@@ -21,7 +21,7 @@ def read_temp_out():
         return jako(1)
 
 def write_temp(pvm): #tallentaa lämpötilatiedot tiedoston uudelle riville
-    tiedosto = open("tiloja.csv", "a")
+    tiedosto = open("data/tiloja.csv", "a")
     temp = read_temp_in() #tallentaa lämpötilan ja päivämäärän erotettuna puolipisteellä
     temp2 = read_temp_out()
     tiedosto.write("{:.2f},{:.2f},{}\n".format(temp,temp2,pvm))
