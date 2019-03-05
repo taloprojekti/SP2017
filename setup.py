@@ -1,5 +1,9 @@
 # Setup-tiedosto
 
+##### MAIN SWITCH ##### 
+def Main_switch():
+	return int(0) # Return 0 for testing and 1 for operational use
+
 ##### HW SETTINGS #####
 def Rele_pin():
 	return int(29) # Board-pinnijaon mukainen GPIO-pinni, johon lämmittimen rele on kytketty.
