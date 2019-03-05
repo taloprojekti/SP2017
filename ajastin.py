@@ -77,13 +77,14 @@ def main():
 
     print("Checking downloader state.")
     ret = checklist.main()
-    if ret == 0:
-        now = datetime.datetime.now()
-        d = now.day
-        m = now.month
-        y = now.year
-        week = datetime.date(y, m, d).isocalendar()[1] #Haetaan viikkonumero
+    print("Initialising clock.")
+    now = datetime.datetime.now()
+    d = now.day
+    m = now.month
+    y = now.year
+    week = datetime.date(y, m, d).isocalendar()[1] #Haetaan viikkonumero
 
+    if ret == 0:
         downloader(y, m, d, week)
 
         if d < 10:
@@ -100,7 +101,7 @@ def main():
 
         file.close()
         # Setup.py -tiedostosta luettujen muuttujien alustus
-    main_switch = setup.Mode_switch() # onko ohjelma testaus- vai käyttötilassa
+    main_switch = setup.Main_switch() # onko ohjelma testaus- vai käyttötilassa
 
     rele_pin = setup.Rele_pin()
     Tfav = setup.Tfav()
@@ -135,24 +136,28 @@ def main():
                 temp_out = float(temp_all[1])
                 
                 now = datetime.datetime.now()
+            elif(main_switch == 0): # kiinteästi asetettavat lämpötilat testausta varten
+                temp_in = 20.0
+                temp_out = 10.0
 
-                PID_curr = PIDajo.process(Tfav, temp_in)
-                # t = tämä hetki
-                # n = start-end-intervallien määrä
+            PID_curr = PIDajo.process(Tfav, temp_in)
+            # t = tämä hetki
+            # n = start-end-intervallien määrä
                             
-            mode = Main_switch(now.hour, now.minute, now.second)
+            mode = mode_switch(now.hour, now.minute, now.second)
 
             print("{:d}:{:d}:{:d}".format(now.hour, now.minute, now.second))
             
             #PID-ajo
             print("{:.4f}".format(PID_curr)) #PID-ajon testi, pitää myöhemmin integroida ajasta riippuvan if-ehdon sisään ja yhdistää lämmittimen hallintaan.
-            print(rele(mode, PID_curr, 21, temp_in, DBmax, DBmin, rele_pin))
-            print()
+            if(main_switch == 1):
+                print("{}\n".format(rele(mode, PID_curr, 21, temp_in, DBmax, DBmin, rele_pin)))
 
             #Telemetria
 
             pvm = str("{}-{}-{},{}:{}:{}".format(now.year, now.month, now.day, now.hour, now.minute, now.second))
-            write_temp(pvm)
+            if(main_switch == 1):
+                write_temp(pvm)
             if (now.minute == 0 and now.hour == 0) or (now.minute == 1 and now.hour == 0):
                 print(flag)
                 if flag == 0:    
@@ -193,7 +198,8 @@ def main():
             #        datetime.now()
                     
     except KeyboardInterrupt:
-        rele_cleanup(rele_pin)
+        if(main_switch == 1):
+            rele_cleanup(rele_pin)
         print("Exiting loop\n")
         return
     
