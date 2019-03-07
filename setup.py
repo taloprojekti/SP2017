@@ -1,42 +1,42 @@
-# Setup-tiedosto
+import json
 
-##### MAIN SWITCH ##### 
-def Main_switch():
-    return int(0) # Return 0 for testing and 1 for operational use
+def read_setup():
+    file = json.load(open("data/setup.json","r"))
+    return file
+def main_switch(data):
+    """returns 0 for testing and 1 for operational use."""
 
-##### HW SETTINGS #####
-def Rele_pin():
-    return int(29) # Board-pinnijaon mukainen GPIO-pinni, johon lämmittimen rele on kytketty.
-    
-##### LÄMPÖTILA-ASETUKSET #####
-def Tmin():
-    return int(19) # Minimilämpötila, johon rakennuksen sisälämmön annetaan laskea.
+    main_switch = int(data["main_switch"])
 
-def Tmax():
-    return int(23) # Maksimilämpötila, johon rakennuksen sisälämmön annetaan nousta.
+    return main_switch
 
-def Tfav():
-    return int(27) # Suosikkilämpötila, johon rakennuksen sisälämpö asetetaan, kun päivän sähkönhinnat ovat tasaiset.
-    
-##### PID-TUNING #####    
-def Pgain():
-    return float(1.0)
-    
-def Igain():
-    return float(0.1)
-    
-def Dgain():
-    return float(0.0)
-    
-def Imax():
-    return float(3.0)
-    
-def Imin():
-    return float(3.0)
-    
-##### RELEEN DEADBAND-ASETUKSET #####
-def DBmin():
-    return 0.0
-    
-def DBmax():
-    return 0.5
+def temperatures(data):
+
+    Tfav = int(data["temperatures"]["Tfav"]) #Favourite temp, which is set, when electricity price is low  
+    Tmin = int(data["temperatures"]["Tmin"]) #Minimum temp which is allowed in building
+    Tmax = int(data["temperatures"]["Tmax"]) #Maximum temp which is allowed in building
+    return Tfav, Tmin, Tmax
+
+def pid_tuning(data):
+    """gains for the pid-controller"""
+
+    Pgain = float(data["pid-tuning"]["Pgain"])
+    Igain = float(data["pid-tuning"]["Igain"])                               
+    Dgain = float(data["pid-tuning"]["Dgain"])
+    Imax = float(data["pid-tuning"]["Imax"])
+    Imin = float(data["pid-tuning"]["Imin"])
+
+    return Pgain, Igain, Dgain, Imax, Imin
+
+def hardware_settings(data):
+    """GPIO-pinn consistent of Board-pinn-distribution,which is connected by relay"""
+    Rele_pin = int(data["hardware_settings"]["Rele_pin"])
+    return Rele_pin
+
+def relay_settings(data):
+
+    DBmin = float(data["relay_settings"]["DBmin"])
+    DBmax = float(data["relay_settings"]["DBmax"])
+    return DBmin, DBmax
+
+
