@@ -101,20 +101,12 @@ def main():
 
         file.close()
         # Setup.py -tiedostosta luettujen muuttujien alustus
-    main_switch = setup.Main_switch() # onko ohjelma testaus- vai käyttötilassa
-
-    rele_pin = setup.Rele_pin()
-    Tfav = setup.Tfav()
-    
-    Pgain = setup.Pgain()
-    Igain = setup.Igain()
-    Dgain = setup.Dgain()
-    
-    DBmin = setup.DBmin()
-    DBmax = setup.DBmax()
-    
-    Imax = setup.Imax()
-    Imin = setup.Imin()
+    data = setup.read_setup()
+    main_switch = setup.main_switch(data) # checks if the program is in testing- or operating mode
+    rele_pin = setup.hardware_settings(data)
+    Tfav, Tmin, Tmax = setup.temperatures(data)
+    Pgain, Igain, Dgain, Imax, Imin = setup.pid_tuning(data)
+    DBmin, DBmax = setup.relay_settings(data)
     
     PIDajo = PIDclass.PID(Pgain, Igain, Dgain, Imax, Imin) # PID-ajon alustus setup-tiedoston gain-arvoilla
     
