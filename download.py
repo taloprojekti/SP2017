@@ -1,7 +1,13 @@
-# Downloaderi hintadatan lukemiseksi Nordpool API:sta.
-
+# Downloader for price data from Nordpool API.
 import time
 import ftplib
+
+def import_credentials():
+    from jsonhandler import importJSON 
+    data = importJSON("data/credentials.json")
+    username = data["username"]
+    password = data["password"]
+    return username, password
 
 def download(year, week):
     print("Starting downloader")
@@ -12,13 +18,9 @@ def download(year, week):
     command = str("RETR spot{}{}.sdv".format((year-2000), week)) # Muodostetaan tiedostonimi serveriltä haettavalle tiedostolle kaavan spot{yy}{ww}.sdv mukaan, missä {yy} on vuosiluku ja {ww} viikko
 
     try:
-        tunnus = []
-        file=open("data/tunnukset.txt", "r")
-        for rivi in file: # Luetaan serverin kirjautumistunnukset tiedostosta
-            tunnus.append(rivi.rstrip())
-
+        username, password = import_credentials()
         ftp = ftplib.FTP("ftp.nordpoolgroup.com")
-        print(ftp.login(tunnus[0], tunnus[1])) # Kirjaudutaan tunnukset.txt -tiedostosta luetuilla tunnuksilla
+        print(ftp.login(username, password)) # Kirjaudutaan tunnukset.txt -tiedostosta luetuilla tunnuksilla
         time.sleep(5)
         ftp.cwd("Elspot")
         time.sleep(5)
