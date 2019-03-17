@@ -1,5 +1,20 @@
 import json
 import jsonhandler
+import os
+
+
+def create_folder():
+    """Creates data-folder for credentials.json and setup.json"""
+    path = os.getcwd() #detect the current working directory and print it
+    path = str(path) + "/data"
+    try:
+        os.mkdir(path)
+        print ("Successfully created the directory 'data'")
+   
+    except FileExistsError:
+            print ("Directory 'data' already exists")
+
+
 def check_credentials():
     """Creates credentials json-file at the beginning"""
     username = str(input("Enter username: ")) #username and password are needed for FTP-server
@@ -54,20 +69,22 @@ def check_setup():
         return 0
  
 def main():
+   
+    create_folder()
     
     if check_setup() == 0:
         print("The file already exists")
         pass
 
     else:
-        print("File created")
+        print("File 'setup.json' created and added to directory 'data'")
 
     if check_credentials() == 0:
         print("The file already exists")
         pass
     
     else:
-        print("File created")
+        print("File 'credentials.json' created and added to directory 'data'")
 
 
 main()
