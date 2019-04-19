@@ -3,17 +3,21 @@ import jsonhandler
 import os
 
 
-def create_folder():
+def create_folder(filedir):
     """Creates data-folder for credentials.json and setup.json"""
     path = os.getcwd() #detect the current working directory and print it
-    path = str(path) + "/data"
+    path = str(path) + filedir
     try:
         os.mkdir(path)
-        print ("Successfully created the directory 'data'")
+        print ("Successfully created the directory", filedir)
    
     except FileExistsError:
-            print ("Directory 'data' already exists")
+            print ("Directory", filedir, "already exists")
 
+def create_tauhka():
+    from jsonhandler import writeJSON
+    data = {"running_times": [["2017-04-19 16:44:45", "2019-05-01 12:01:55"], ["2017-04-19 16:44:45", "2019-05-01 12:01:55"]], "downloader_time": "2019-04-19"}
+    writeJSON("tasklists/tasklist.json", data)
 
 def check_credentials():
     """Creates credentials json-file at the beginning"""
@@ -26,6 +30,15 @@ def check_credentials():
             return 1
     except FileExistsError:
         return 0
+
+def create_tasklist():
+    try:
+        file = open("tasklists/tasklist.json", "x")
+        file.close()
+        return 1
+    except FileExistsError:
+        return 0
+
 
 def check_setup():
     """Creates setup settings json-file at the beginning"""
@@ -70,21 +83,27 @@ def check_setup():
  
 def main():
    
-    create_folder()
+    create_folder("/data")
+    create_folder("/tasklists")
+    if create_tasklist() == 0:
+        pass
     
+    else:
+        print("File 'tasklist.json' created and added to directory 'tasklists'")
+
     if check_setup() == 0:
-        print("The file already exists")
+        print("The file 'tasklist.json' already exists")
         pass
 
     else:
         print("File 'setup.json' created and added to directory 'data'")
 
     if check_credentials() == 0:
-        print("The file already exists")
+        print("The file 'check_credentials' already exists")
         pass
     
     else:
         print("File 'credentials.json' created and added to directory 'data'")
-
+    create_tauhka()
 
 main()
