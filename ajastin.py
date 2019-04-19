@@ -1,7 +1,16 @@
 def downloader(year, month, day, week):
-    import download
-    download.download(year, week)
-    return 0
+    #downloads the data from Nordpool
+    from download import download
+    from jsonhandler import importJSON, writeJSON
+    time = str("{:4d}-{:02d}-{:02d}".format(year, month,day))
+    data = importJSON("tasklists/tasklist.json")
+    if time != data["downloader_time"]:
+        download(year, week)
+        data["downloader_time"] = time
+        writeJSON("tasklists/tasklist.json", data)
+        return 1
+    else:
+        return 0
 
 def rele(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin):
     import rele
@@ -25,27 +34,40 @@ def ptulkinta(day, month, year, hour):
     import tulkinta
     tulkinta.main(day, month, year, hour)
     
-def mode_switch(hour, minute, second):
-    import csv
-    with open('tasklists/tasklist-prog.csv', "r") as f: 
-        fileReader = csv.reader(f)
-        arr = []                    #matriisi jonka yksi rivi sisältää aina yhden rivin tiedot
-        for row in fileReader:
-            arr.append(row)
-    f.close()
-    #for looppi joka vetää filen läpi start-end-intervalleissa
-    #flag joka nousee jos time sekä date ovat jollain näistä väleistä
+def mode_switch(current_time):
+    from datetime import datetime
+    from jsonhandler import importJSON
+    data = importJSON("tasklists/tasklist.json")
+    
+    #matriisi jonka yksi rivi sisältää aina yhden rivin tiedot 
+    time_list = [] 
 
-    if second < 10:
-        second = str(second)
-        second = "0"+second
-    if minute < 10:
-        minute = str(minute)
-        minute = "0"+minute
-    if hour < 10:
-        hour = str(hour)
-        hour = "0"+hour
-    taim = str("{}:{}:{}".format(hour, minute, second))
+    #Creates a list, which includes all starting and finishing times alternately        
+    time_list.append(data["running_times"])
+    i = 0
+    #Checks if heating should be turned off
+    for part in time_list:
+        starting_time = part[i][0]
+        finishing_time = part[i][1]
+        datetime1 = datetime.strptime(starting_time,"%Y-%m-%d %H:%M:%S")
+        datetime2 = datetime.strptime(finishing_time,"%Y-%m-%d %H:%M:%S")
+        datetime_now = datetime.strptime(current_time,"%Y-%m-%d,%H:%M:%S")
+        i += 1
+        if datetime_now > datetime1:
+        
+            if datetime2 > datetime_now:
+                return 1 
+            else:
+                pass
+        else:
+            pass
+    return 0
+        
+    #for looppi joka vetää filen läpi start-end-intervalleissa
+    #flag joka nousee jos time seikä date ovat jollain näistä väleistä
+
+    
+    taim = str("{:02d}:{:02d}:{:02d}".format(hour, minute, second))
     n = 1
     print("len:{:d}".format(len(arr)))
     flag = 0
@@ -83,38 +105,21 @@ def main():
     m = now.month
     y = now.year
     week = datetime.date(y, m, d).isocalendar()[1] #Haetaan viikkonumero
+    ret = downloader(y, m, d, week)
+    if ret == 1:
+        print("download complete")
+    else:
+        ("download data already exists")
+       
+        
 
-    if ret == 0:
-        downloader(y, m, d, week)
-
-        if d < 10:
-            if m < 10:
-                strN = "0" + str(d) + "0" + str(m) + str(y)
-            else:    
-                strN = "0" + str(d) + str(m) + str(y)
-        if m < 10 and d > 10:
-            strN = str(d) + "0" + str(m) + str(y)
-        else:
-            strN = str(d) + str(m) + str(y)
-        file = open("tasklists/tasklist-downloader.txt", "w")
-        file.write(strN)
-
-        file.close()
         # Setup.py -tiedostosta luettujen muuttujien alustus
-    main_switch = setup.Main_switch() # onko ohjelma testaus- vai käyttötilassa
-
-    rele_pin = setup.Rele_pin()
-    Tfav = setup.Tfav()
-    
-    Pgain = setup.Pgain()
-    Igain = setup.Igain()
-    Dgain = setup.Dgain()
-    
-    DBmin = setup.DBmin()
-    DBmax = setup.DBmax()
-    
-    Imax = setup.Imax()
-    Imin = setup.Imin()
+    data = setup.read_setup()
+    main_switch = setup.main_switch(data) # checks if the program is in testing- or operating mode
+    rele_pin = setup.hardware_settings(data)
+    Tfav, Tmin, Tmax = setup.temperatures(data)
+    Pgain, Igain, Dgain, Imax, Imin = setup.pid_tuning(data)
+    DBmin, DBmax = setup.relay_settings(data)
     
     PIDajo = PIDclass.PID(Pgain, Igain, Dgain, Imax, Imin) # PID-ajon alustus setup-tiedoston gain-arvoilla
     
@@ -128,14 +133,15 @@ def main():
     try:
         print("Entering loop")
         while ret1 == 0:
-            time.sleep(10)    
+            time.sleep(10)
+            now = datetime.datetime.now()
+
             if(main_switch == 1):
                 #Lämpötilan lukeminen
                 temp_all = tempread_all()
                 temp_in = float(temp_all[0])
                 temp_out = float(temp_all[1])
                 
-                now = datetime.datetime.now()
             elif(main_switch == 0): # kiinteästi asetettavat lämpötilat testausta varten
                 temp_in = 20.0
                 temp_out = 10.0
@@ -143,20 +149,22 @@ def main():
             PID_curr = PIDajo.process(Tfav, temp_in)
             # t = tämä hetki
             # n = start-end-intervallien määrä
-                            
-            mode = mode_switch(now.hour, now.minute, now.second)
+            pvm = str("{:4d}-{:02d}-{:02d},{:02}:{:02d}:{:02d}".format(now.year, now.month, now.day, now.hour, now.minute, now.second))
+            mode = mode_switch(pvm)
 
             print("{:d}:{:d}:{:d}".format(now.hour, now.minute, now.second))
             
             #PID-ajo
             print("{:.4f}".format(PID_curr)) #PID-ajon testi, pitää myöhemmin integroida ajasta riippuvan if-ehdon sisään ja yhdistää lämmittimen hallintaan.
-            if(main_switch == 1):
-                print("{}\n".format(rele(mode, PID_curr, 21, temp_in, DBmax, DBmin, rele_pin)))
 
+            if (main_switch == 1 and mode == 0):
+                print("{}\n".format(rele(mode, PID_curr, 21, temp_in, DBmax, DBmin, rele_pin)))
+            
+            else:
+                print("Heating is turned off due to higher price of electricity")
             #Telemetria
 
-            pvm = str("{}-{}-{},{}:{}:{}".format(now.year, now.month, now.day, now.hour, now.minute, now.second))
-            if(main_switch == 1):
+            if (main_switch == 1):
                 write_temp(pvm)
             if (now.minute == 0 and now.hour == 0) or (now.minute == 1 and now.hour == 0):
                 print(flag)
@@ -167,6 +175,7 @@ def main():
                     y = now.year
                     week = datetime.date(y, m, d).isocalendar()[1] #Haetaan viikkonumero
                     downloader(y, m, d, week)
+                    """legacy code"""
                     if d < 10:
                         if m < 10:
                             stringtowrite = "0" + str(d) + "0" + str(m) + str(y)

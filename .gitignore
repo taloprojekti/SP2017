@@ -1,4 +1,6 @@
 *.pyc
+*.swn
 *.swp
+*.swo
 data/*
 tasklists/*
