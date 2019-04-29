@@ -12,6 +12,7 @@ def downloader(year, month, day, week):
     else:
         return 0
 
+
 def rele(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin):
     import rele
     tila = rele.switch(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin)
@@ -24,8 +25,9 @@ def rele_cleanup(rele_pin):
     
 def tempread_all():
     import tempread
-    return tempread.read_temp()
-    
+    temp_in,temp_out = tempread.read_temp()
+    return temp_in, temp_out
+
 def write_temp(pvm):
     import tempread
     tempread.write_temp(pvm)
@@ -92,11 +94,10 @@ def main():
     import setup
     import PIDclass
     import checklist
-    
+    from algorithm import derivatives    
     n = 0
     ret1 = 0
     t0 = time.time()
-
     print("Checking downloader state.")
     ret = checklist.main()
     print("Initialising clock.")
@@ -110,9 +111,9 @@ def main():
         print("download complete")
     else:
         ("download data already exists")
-       
-        
-
+   
+    
+            
         # Setup.py -tiedostosta luettujen muuttujien alustus
     data = setup.read_setup()
     main_switch = setup.main_switch(data) # checks if the program is in testing- or operating mode
@@ -138,9 +139,7 @@ def main():
 
             if(main_switch == 1):
                 #Lämpötilan lukeminen
-                temp_all = tempread_all()
-                temp_in = float(temp_all[0])
-                temp_out = float(temp_all[1])
+		temp_in, temp_out = tempread_all()
                 
             elif(main_switch == 0): # kiinteästi asetettavat lämpötilat testausta varten
                 temp_in = 20.0
@@ -194,14 +193,14 @@ def main():
                         now = datetime.now()
                 else:
                     continue
-                    
+            derivatives(d, m, y)
+          
             if (now.minute == 5 and now.hour == 0):     #resetoi flagin nollaksi, jotta sitä voidaan käyttää ensi keskiyönä
                 flag = 0
                 
             if (now.minute == 54 and now.hour == 3) or (now.minute == 55 and now.hour == 3):
                 ptulkinta(now.day, now.month, now.year, now.hour)
-
-            #if now.minute % 30 == 0:
+                      #if now.minute % 30 == 0:
             #    while now.minute % 30:
             #        time.sleep(1)
             #        datetime.now()
