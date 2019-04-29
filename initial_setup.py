@@ -68,11 +68,15 @@ def check_setup():
     input_list = [7,11,13,15,16,18,22,29,31,32,33,35,36,37,38,40]
     while Hardware_settings not in input_list:
 
-        Hardware_settings = int(input("Enter relays GPIO-pin. GPIO-pin must be one of the following: (7,11,13,15,16,18,22,29,31,32,33,35,36,37,38,40) "))
-        
+        Hardware_settings = int(input("Enter relay's GPIO-pin. GPIO-pin must be one of the following: (7,11,13,15,16,18,22,29,31,32,33,35,36,37,38,40) "))
+    input_list.remove(Hardware_settings)
+    Temp_sensor = int(input("Enter temp.sensor's GPIO-pin. GPIO-pin must be one of the following except relay's pin: (7,11,13,15,16,18,22,29,31,32,33,35,36,37,38,40)"))
+
+    while Temp_sensor not in input_list:
+        Temp_sensor = int(input("Enter temp.sensor's GPIO-pin. GPIO-pin must be one of the following except relay's pin: (7,11,13,15,16,18,22,29,31,32,33,35,36,37,38,40)"))
 
 
-    setup_settings = {"main_switch":main_switch,"temperatures":{"Tmax":TMax,"Tmin":TMin,"Tfav":TFav},"pid-tuning":{"Pgain":1.0,"Igain":0.1,"Dgain":0.0,"Imax":3.0,"Imin":3.0},"relay_settings":{"DBmin":0.0,"DBmax":0.5},"hardware_settings":{"Rele_pin":Hardware_settings}}
+    setup_settings = {"main_switch":main_switch,"temperatures":{"Tmax":TMax,"Tmin":TMin,"Tfav":TFav},"pid-tuning":{"Pgain":1.0,"Igain":0.1,"Dgain":0.0,"Imax":3.0,"Imin":3.0},"relay_settings":{"DBmin":0.0,"DBmax":0.5},"hardware_settings":{"Rele_pin":Hardware_settings},"Temperature_sensor":{"Temp_pin":Temp_sensor}}
 
     try:
         with open("data/setup.json", "x") as outfile:
