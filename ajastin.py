@@ -139,8 +139,7 @@ def main():
 
             if(main_switch == 1):
                 #Lämpötilan lukeminen
-		temp_in, temp_out = tempread_all()
-                
+                temp_in,temp_out = tempread_all()
             elif(main_switch == 0): # kiinteästi asetettavat lämpötilat testausta varten
                 temp_in = 20.0
                 temp_out = 10.0
@@ -193,7 +192,7 @@ def main():
                         now = datetime.now()
                 else:
                     continue
-            derivatives(d, m, y)
+            
           
             if (now.minute == 5 and now.hour == 0):     #resetoi flagin nollaksi, jotta sitä voidaan käyttää ensi keskiyönä
                 flag = 0
