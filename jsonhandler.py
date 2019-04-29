@@ -11,9 +11,10 @@ def importJSON(filedir):
     return False
 
 def writeJSON(filedir, data):
+  
     from json import dumps, JSONEncoder
     json_data = dumps(data)
     file = open(filedir, 'w', encoding='utf-8')
     file.write(json_data)
-
     return 1
+

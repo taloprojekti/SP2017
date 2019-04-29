@@ -14,7 +14,7 @@ def main(day, month, year, hour):
         month = str(month)
         month = str("0"+month)
 
-    pvm = str("{}.{}.{}".format(day, month, year))
+    pvm = str("{:02d}.{:02d}.{:4d}".format(day, month, year))
     print(pvm)
 
     tiedot = lukeminen.luetiedot(pvm)
