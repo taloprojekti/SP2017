@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BOARD)
 
 def virta_on(rele_pin):
     GPIO.output(rele_pin, GPIO.HIGH)
@@ -7,11 +8,11 @@ def virta_off(rele_pin):
     GPIO.output(rele_pin, GPIO.LOW)
     
 def cleanup(rele_pin):
+    GPIO.setup(rele_pin, GPIO.OUT)
     GPIO.output(rele_pin, GPIO.LOW)
     GPIO.cleanup()
     
 def switch(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin):
-    GPIO.setmode(GPIO.BOARD)
     GPIO.setup(rele_pin, GPIO.OUT)
     if mode == "active":
         if temp_req > temp_now:
