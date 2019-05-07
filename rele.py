@@ -14,6 +14,7 @@ def cleanup(rele_pin):
     
 def switch(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin):
     GPIO.setup(rele_pin, GPIO.OUT)
+    #if heater is in energy saving mode
     if mode == "active":
         if temp_req > temp_now:
             virta_on(rele_pin)
@@ -21,7 +22,7 @@ def switch(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin):
         else:
             virta_off(rele_pin)
             return "off"
-            
+    #if heater is turned on
     elif mode == "PIDctrl":
         if PID > deadband_max:
             virta_on(rele_pin)
