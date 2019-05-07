@@ -136,27 +136,28 @@ def main():
         while ret1 == 0:
             time.sleep(10)
             now = datetime.datetime.now()
-
+            
             if(main_switch == 1):
                 #Lämpötilan lukeminen
                 temp_in,temp_out = tempread_all()
+                print("Temp_in: {:.2f} Temp_out: {:.2f}".format(temp_in, temp_out))
             elif(main_switch == 0): # kiinteästi asetettavat lämpötilat testausta varten
                 temp_in = 20.0
                 temp_out = 10.0
-
+                
             PID_curr = PIDajo.process(Tfav, temp_in)
             # t = tämä hetki
             # n = start-end-intervallien määrä
             pvm = str("{:4d}-{:02d}-{:02d},{:02}:{:02d}:{:02d}".format(now.year, now.month, now.day, now.hour, now.minute, now.second))
             mode = mode_switch(pvm)
 
-            print("{:d}:{:d}:{:d}".format(now.hour, now.minute, now.second))
+            print("Time: {:d}:{:d}:{:d}".format(now.hour, now.minute, now.second))
             
             #PID-ajo
-            print("{:.4f}".format(PID_curr)) #PID-ajon testi, pitää myöhemmin integroida ajasta riippuvan if-ehdon sisään ja yhdistää lämmittimen hallintaan.
-
+            print("PID-value: {:.4f}".format(PID_curr)) #PID-ajon testi, pitää myöhemmin integroida ajasta riippuvan if-ehdon sisään ja yhdistää lämmittimen hallintaan.
+    
             if (main_switch == 1 and mode == 0):
-                print("{}\n".format(rele(mode, PID_curr, 21, temp_in, DBmax, DBmin, rele_pin)))
+                print("Rele mode: {}\n".format(rele(mode, PID_curr, 21, temp_in, DBmax, DBmin, rele_pin)))
             
             else:
                 print("Heating is turned off due to higher price of electricity")
