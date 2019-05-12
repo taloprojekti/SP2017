@@ -16,7 +16,9 @@ def create_folder(filedir):
 
 def create_tauhka():
     from jsonhandler import writeJSON
-    data = {"running_times": [["2017-04-19 16:44:45", "2019-05-01 12:01:55"], ["2017-04-19 16:44:45", "2019-05-01 12:01:55"]], "downloader_time": "2019-04-19"}
+    data = {}
+    data["running_times"] = ""
+    data["downloader_time"] = ""
     writeJSON("tasklists/tasklist.json", data)
 
 def check_credentials():
