@@ -42,13 +42,27 @@ def mode_switch(current_time):
     data = importJSON("tasklists/tasklist.json")
     
     #matriisi jonka yksi rivi sisältää aina yhden rivin tiedot 
-    time_list = [] 
 
     #Creates a list, which includes all starting and finishing times alternately        
-    time_list.append(data["running_times"])
     i = 0
     #Checks if heating should be turned off
-    for part in time_list:
+    for part in data["running_times"]:
+        for time in part:
+            starting_time = part[0]
+            finishing_time = part[1]
+            datetime1 = datetime.strptime(starting_time,"%Y-%m-%d %H:%M:%S")
+            datetime2 = datetime.strptime(finishing_time,"%Y-%m-%d %H:%M:%S")
+            datetime_now = datetime.strptime(current_time,"%Y-%m-%d,%H:%M:%S")
+            i += 1
+            if datetime_now > datetime1:
+                if datetime2 > datetime_now:
+                    return 1 
+                else:
+                    pass
+            else:
+                pass
+    return 0
+    """ for part in data["running_times"]:
         starting_time = part[i][0]
         finishing_time = part[i][1]
         datetime1 = datetime.strptime(starting_time,"%Y-%m-%d %H:%M:%S")
@@ -63,7 +77,7 @@ def mode_switch(current_time):
                 pass
         else:
             pass
-    return 0
+    return 0"""
         
     #for looppi joka vetää filen läpi start-end-intervalleissa
     #flag joka nousee jos time seikä date ovat jollain näistä väleistä
@@ -94,7 +108,7 @@ def main():
     import setup
     import PIDclass
     import checklist
-    #from algorithm import derivatives    
+    import algorithm    
     n = 0
     ret1 = 0
     t0 = time.time()
@@ -130,9 +144,9 @@ def main():
     print("    Integrator range: {:.1f} - {:.1f}\n".format(Imin,Imax))
 
     flag = 0    #tarvitaan downloaderissa
-
     try:
         print("Entering loop")
+        print("Please wait...")
         while ret1 == 0:
             time.sleep(10)
             now = datetime.datetime.now()
@@ -141,15 +155,17 @@ def main():
                 #Lämpötilan lukeminen
                 temp_in,temp_out = tempread_all()
                 print("Temp_in: {:.2f} Temp_out: {:.2f}".format(temp_in, temp_out))
+                on_off_list = algorithm.main(d,m,y,temp_in,Tfav,Tmin,Tmax)
             elif(main_switch == 0): # kiinteästi asetettavat lämpötilat testausta varten
                 temp_in = 20.0
-                temp_out = 10.0
-                
+                temp_out = 10.0 
+                on_off_list = algorithm.main(d,m,y,temp_in,Tfav,Tmin,Tmax)
             PID_curr = PIDajo.process(Tfav, temp_in)
             # t = tämä hetki
             # n = start-end-intervallien määrä
             pvm = str("{:4d}-{:02d}-{:02d},{:02}:{:02d}:{:02d}".format(now.year, now.month, now.day, now.hour, now.minute, now.second))
             mode = mode_switch(pvm)
+             
 
             print("Time: {:d}:{:d}:{:d}".format(now.hour, now.minute, now.second))
             
