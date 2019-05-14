@@ -39,11 +39,7 @@ def ptulkinta(day, month, year, hour):
 def mode_switch(current_time):
     from datetime import datetime
     from jsonhandler import importJSON
-    data = importJSON("tasklists/tasklist.json")
-    
-    #matriisi jonka yksi rivi sisältää aina yhden rivin tiedot 
-
-    #Creates a list, which includes all starting and finishing times alternately        
+    data = importJSON("tasklists/tasklist.json")       
     i = 0
     #Checks if heating should be turned off
     for part in data["running_times"]:
@@ -62,24 +58,7 @@ def mode_switch(current_time):
             else:
                 pass
     return 0
-    """ for part in data["running_times"]:
-        starting_time = part[i][0]
-        finishing_time = part[i][1]
-        datetime1 = datetime.strptime(starting_time,"%Y-%m-%d %H:%M:%S")
-        datetime2 = datetime.strptime(finishing_time,"%Y-%m-%d %H:%M:%S")
-        datetime_now = datetime.strptime(current_time,"%Y-%m-%d,%H:%M:%S")
-        i += 1
-        if datetime_now > datetime1:
         
-            if datetime2 > datetime_now:
-                return 1 
-            else:
-                pass
-        else:
-            pass
-    return 0"""
-        
-    #for looppi joka vetää filen läpi start-end-intervalleissa
     #flag joka nousee jos time seikä date ovat jollain näistä väleistä
 
     

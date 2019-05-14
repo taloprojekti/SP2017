@@ -101,7 +101,7 @@ def compare_prices(data,slopelist,average,temp_in,Tfav,Tmin,Tmax):
                 else:
                     on_off_list.append(0)
                     i += 1
-
+    print("Rele mode values:")
     print(on_off_list)
     return on_off_list
 
@@ -215,6 +215,7 @@ def mode_list(on_off_list,y,m,d):
                     i += 1
             else:
                 i += 1
+    print("Running times:")
     print(time_list)
     data = importJSON("tasklists/tasklist.json")
     downloader_time = data["downloader_time"]
