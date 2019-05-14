@@ -148,7 +148,7 @@ def main():
         print("Entering loop")
         print("Please wait...")
         while ret1 == 0:
-            time.sleep(10)
+            time.sleep(1)
             now = datetime.datetime.now()
             
             if(main_switch == 1):
@@ -172,7 +172,7 @@ def main():
             #PID-ajo
             print("PID-value: {:.4f}".format(PID_curr)) #PID-ajon testi, pitää myöhemmin integroida ajasta riippuvan if-ehdon sisään ja yhdistää lämmittimen hallintaan.
     
-            if (main_switch == 1 and mode == 0):
+            if (main_switch == 1):
                 print("Rele mode: {}\n".format(rele(mode, PID_curr, 21, temp_in, DBmax, DBmin, rele_pin)))
             
             else:
@@ -205,7 +205,7 @@ def main():
                     file.close()
 
                     while now.minute == 0:
-                        time.sleep(1)
+                        time.sleep(0.5)
                         now = datetime.now()
                 else:
                     continue
@@ -218,7 +218,7 @@ def main():
                 ptulkinta(now.day, now.month, now.year, now.hour)
                       #if now.minute % 30 == 0:
             #    while now.minute % 30:
-            #        time.sleep(1)
+            #        time.sleep(0.5)
             #        datetime.now()
                     
     except KeyboardInterrupt:

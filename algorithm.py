@@ -171,10 +171,10 @@ def mode_list(on_off_list,y,m,d):
                 if on_off_list[i] == 1:
                     if on_off_list[i-1] == 0:
                         time_list[index].append("{:4d}-{:02d}-{:02d} {:02}:{:02d}:{:02d}".format(y,m,d,i+1,mi,s))
-                        time_list[index].append("{:4d}-{:02d}-{:02d} {:02}:{:02d}:{:02d}".format(y,m,d,0,mi,s))
+                        time_list[index].append("{:4d}-{:02d}-{:02d} {:02}:{:02d}:{:02d}".format(y,m,d,23,59,59))
                         i += 1
                     else:
-                        time_list[index].append("{:4d}-{:02d}-{:02d} {:02}:{:02d}:{:02d}".format(y,m,d,0,mi,s))
+                        time_list[index].append("{:4d}-{:02d}-{:02d} {:02}:{:02d}:{:02d}".format(y,m,d,23,59,59))
                         i += 1
 
                 else:
