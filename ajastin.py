@@ -14,34 +14,39 @@ def downloader(year, month, day, week):
 
 
 def rele(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin):
+    #Turns the relay on/off
     import rele
     tila = rele.switch(mode, PID, temp_req, temp_now, deadband_max, deadband_min, rele_pin)
     return tila
     
 def rele_cleanup(rele_pin):
+    #Sets the given GPIO pin for relay
     import rele
     rele.cleanup(rele_pin)
     print("GPIO cleanup done")
     
 def tempread_all():
+    #Reads the in- and out temperatures from sensors
     import tempread
     temp_in,temp_out = tempread.read_temp()
     return temp_in, temp_out
 
 def write_temp(pvm):
+    #Saves the temp information to data folder
     import tempread
     tempread.write_temp(pvm)
 
 def ptulkinta(day, month, year, hour):
+    #legacy code
     import tulkinta
     tulkinta.main(day, month, year, hour)
     
 def mode_switch(current_time):
+    #Checks if heating should be turned off
     from datetime import datetime
     from jsonhandler import importJSON
     data = importJSON("tasklists/tasklist.json")       
     i = 0
-    #Checks if heating should be turned off
     for part in data["running_times"]:
         for time in part:
             starting_time = part[0]
@@ -59,9 +64,7 @@ def mode_switch(current_time):
                 pass
     return 0
         
-    #flag joka nousee jos time seikä date ovat jollain näistä väleistä
-
-    
+    #flag which rises if both time and date are in between one of these intervals
     taim = str("{:02d}:{:02d}:{:02d}".format(hour, minute, second))
     n = 1
     print("len:{:d}".format(len(arr)))
@@ -87,7 +90,7 @@ def main():
     import setup
     import PIDclass
     import checklist
-    import algorithm    
+    import algorithm
     n = 0
     ret1 = 0
     t0 = time.time()
@@ -98,16 +101,14 @@ def main():
     d = now.day
     m = now.month
     y = now.year
-    week = datetime.date(y, m, d).isocalendar()[1] #Haetaan viikkonumero
+    week = datetime.date(y, m, d).isocalendar()[1] #Weeknumber is accessed
     ret = downloader(y, m, d, week)
     if ret == 1:
         print("download complete")
     else:
         ("download data already exists")
    
-    
-            
-        # Setup.py -tiedostosta luettujen muuttujien alustus
+    #Initialisation of variables read from Setup.py -folder
     data = setup.read_setup()
     main_switch = setup.main_switch(data) # checks if the program is in testing- or operating mode
     rele_pin = setup.hardware_settings(data)
@@ -115,14 +116,14 @@ def main():
     Pgain, Igain, Dgain, Imax, Imin = setup.pid_tuning(data)
     DBmin, DBmax = setup.relay_settings(data)
     
-    PIDajo = PIDclass.PID(Pgain, Igain, Dgain, Imax, Imin) # PID-ajon alustus setup-tiedoston gain-arvoilla
+    PIDajo = PIDclass.PID(Pgain, Igain, Dgain, Imax, Imin) #Initialisation of PID-drive with gain values by setup-file
     
     print("Setup complete:")
     print("    PID-Gains: P={:.1f}, I={:.1f}, D={:.1f}".format(Pgain,Igain,Dgain))
     print("    PID-Deadband: {:.1f} - {:.1f}".format(DBmin,DBmax))
     print("    Integrator range: {:.1f} - {:.1f}\n".format(Imin,Imax))
 
-    flag = 0    #tarvitaan downloaderissa
+    flag = 0    #This is needed in downloader
     try:
         print("Entering loop")
         print("Please wait...")
@@ -131,43 +132,43 @@ def main():
             now = datetime.datetime.now()
             
             if(main_switch == 1):
-                #Lämpötilan lukeminen
+                #Temperature reading
                 temp_in,temp_out = tempread_all()
                 print("Temp_in: {:.2f} Temp_out: {:.2f}".format(temp_in, temp_out))
                 on_off_list = algorithm.main(d,m,y,temp_in,Tfav,Tmin,Tmax)
-            elif(main_switch == 0): # kiinteästi asetettavat lämpötilat testausta varten
+            elif(main_switch == 0): #Constant set temp values for testing mode
                 temp_in = 20.0
                 temp_out = 10.0 
                 on_off_list = algorithm.main(d,m,y,temp_in,Tfav,Tmin,Tmax)
             PID_curr = PIDajo.process(Tfav, temp_in)
-            # t = tämä hetki
-            # n = start-end-intervallien määrä
+            # t = this moment
+            # n = amount of start-end-intervals
             pvm = str("{:4d}-{:02d}-{:02d},{:02}:{:02d}:{:02d}".format(now.year, now.month, now.day, now.hour, now.minute, now.second))
             mode = mode_switch(pvm)
              
 
             print("Time: {:d}:{:d}:{:d}".format(now.hour, now.minute, now.second))
             
-            #PID-ajo
-            print("PID-value: {:.4f}".format(PID_curr)) #PID-ajon testi, pitää myöhemmin integroida ajasta riippuvan if-ehdon sisään ja yhdistää lämmittimen hallintaan.
+            #PID-drive
+            print("PID-value: {:.4f}".format(PID_curr)) #Test of PID-drive, pitää myöhemmin integroida ajasta riippuvan if-ehdon sisään ja yhdistää lämmittimen hallintaan.
     
             if (main_switch == 1):
                 print("Rele mode: {}\n".format(rele(mode, PID_curr, 21, temp_in, DBmax, DBmin, rele_pin)))
             
             else:
-                print("Heating is turned off due to higher price of electricity")
-            #Telemetria
+                print("Testing mode, heating is turned off")
+            #Telemetry
 
             if (main_switch == 1):
                 write_temp(pvm)
             if (now.minute == 0 and now.hour == 0) or (now.minute == 1 and now.hour == 0):
                 print(flag)
                 if flag == 0:    
-                    flag = 1                    #jotta mentäisiin tähän vain kerran
+                    flag = 1                    #so that this part runs only once
                     d = now.day
                     m = now.month
                     y = now.year
-                    week = datetime.date(y, m, d).isocalendar()[1] #Haetaan viikkonumero
+                    week = datetime.date(y, m, d).isocalendar()[1] #Weeknumber is accessed
                     downloader(y, m, d, week)
                     """legacy code"""
                     if d < 10:
@@ -189,13 +190,12 @@ def main():
                 else:
                     continue
             
-          
-            if (now.minute == 5 and now.hour == 0):     #resetoi flagin nollaksi, jotta sitä voidaan käyttää ensi keskiyönä
+            if (now.minute == 5 and now.hour == 0):     #resets the flag to zero value,in order to use it next time to download daily data from Nord pool
                 flag = 0
                 
             if (now.minute == 54 and now.hour == 3) or (now.minute == 55 and now.hour == 3):
                 ptulkinta(now.day, now.month, now.year, now.hour)
-                      #if now.minute % 30 == 0:
+            #if now.minute % 30 == 0:
             #    while now.minute % 30:
             #        time.sleep(0.5)
             #        datetime.now()

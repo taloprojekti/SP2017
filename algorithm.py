@@ -1,10 +1,12 @@
 def derivatives(d, m, y):
+    from jsonhandler import writeJSON
+    from parsinta import luesdv
+    from lukeminen import luetiedot
     tiedot ={}
     slopelist = []
     date = ("{:02}.{:02}.{:4d}".format(d, m, y))
-    from parsinta import luesdv
-    from lukeminen import luetiedot
     data = luesdv(tiedot,date)
+    writeJSON("data/graph.json",data)
     i = 0
     #calculates the slopes of hinta.sdv for every hour.
     while i < 24:
@@ -103,6 +105,8 @@ def compare_prices(data,slopelist,average,temp_in,Tfav,Tmin,Tmax):
                     i += 1
     print("Rele mode values:")
     print(on_off_list)
+    from jsonhandler import writeJSON
+    writeJSON("data/graph2.json",on_off_list)
     return on_off_list
 
 def mode_list(on_off_list,y,m,d):
