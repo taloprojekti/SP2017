@@ -21,6 +21,13 @@ def create_tauhka():
     data["downloader_time"] = ""
     writeJSON("tasklists/tasklist.json", data)
 
+def graph():
+    from jsonhandler import writeJSON
+    y_axis = {}
+    running_times = []
+    writeJSON("data/graph.json", y_axis)
+    writeJSON("data/graph2.json", running_times)
+
 def check_credentials():
     """Creates credentials json-file at the beginning"""
     username = str(input("Enter username: ")) #username and password are needed for FTP-server
@@ -86,6 +93,7 @@ def main():
    
     create_folder("/data")
     create_folder("/tasklists")
+    graph()
     if create_tasklist() == 0:
         pass
     
